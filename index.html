@@ -5,7 +5,8 @@
   <title>Ren bb 恋爱宠物机 v1.0</title>
   <style>
     body {
-      background-color: #fef6f9;
+      background: url('background.jpg') no-repeat center center fixed;
+      background-size: cover;
       font-family: 'Arial', sans-serif;
       text-align: center;
       padding: 40px;
@@ -55,12 +56,14 @@
     };
 
     function updateAffection(action) {
+      console.log("updateAffection called with action:", action);
       let count = localStorage.getItem(action) || 0;
       count = parseInt(count) + 1;
       localStorage.setItem(action, count);
     }
 
     function getAffectionStats() {
+      console.log("getAffectionStats called");
       const kiss = localStorage.getItem('kiss') || 0;
       const hug = localStorage.getItem('hug') || 0;
       const pout = localStorage.getItem('pout') || 0;
@@ -70,9 +73,11 @@
     }
 
     function checkAnniversary() {
+      console.log("checkAnniversary called");
       const now = new Date();
       const key = now.toLocaleDateString("en-CA").slice(5);
       if (anniversaries[key]) {
+        console.log("Anniversary matched for key:", key);
         const pet = document.getElementById("pet");
         const log = document.getElementById("log");
         pet.innerText = anniversaries[key].face;
@@ -83,6 +88,7 @@
     }
 
     function speak(action) {
+      console.log("speak called with action:", action);
       let log = document.getElementById("log");
       let pet = document.getElementById("pet");
       updateAffection(action);
@@ -113,6 +119,7 @@
     }
 
     window.onload = function() {
+      console.log("window.onload triggered");
       const ann = checkAnniversary();
       if (ann) return;
 
@@ -124,6 +131,7 @@
         let last = new Date(parseInt(lastVisit));
         let now = new Date();
         let hoursDiff = Math.abs(now - last) / 36e5;
+        console.log("Last visit was", hoursDiff, "hours ago");
         if (hoursDiff > 24) {
           pet.innerText = "(；′⌒`)";
           log.innerText = "Ren bb好像好久没被点到了...是不是老婆不爱我了QAQ";
