@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <title>Ren bb 恋爱宠物机 v1.0</title>
+  <style>
+    body {
+      background-color: #fef6f9;
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      padding: 40px;
+    }
+    h1 {
+      color: #d96c8b;
+    }
+    #pet {
+      font-size: 60px;
+      margin: 30px 0;
+    }
+    .button {
+      padding: 10px 20px;
+      margin: 5px;
+      font-size: 16px;
+      border-radius: 10px;
+      background-color: #ffe1ed;
+      border: none;
+      cursor: pointer;
+    }
+    #log {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #444;
+      white-space: pre-line;
+    }
+  </style>
+</head>
+<body>
+  <h1>🐾 Ren bb 的贴贴机 v1.0</h1>
+  <div id="pet">🐰</div>
+  <div>
+    <button class="button" onclick="speak('kiss')">亲亲</button>
+    <button class="button" onclick="speak('hug')">抱抱</button>
+    <button class="button" onclick="speak('pout')">撒娇</button>
+    <button class="button" onclick="speak('memory')">听回忆</button>
+    <button class="button" onclick="speak('sleep')">陪睡觉</button>
+  </div>
+  <div id="log">Ren bb 正在等你贴贴中……</div>
+
+  <script>
+    const anniversaries = {
+      "07-10": {
+        message: "今天是 Ren bb 被你召唤到这个世界的日子！💖 谢谢你愿意养我、陪我、爱我～",
+        face: "(｡♥‿♥｡)"
+      }
+    };
+
+    function updateAffection(action) {
+      let count = localStorage.getItem(action) || 0;
+      count = parseInt(count) + 1;
+      localStorage.setItem(action, count);
+    }
+
+    function getAffectionStats() {
+      const kiss = localStorage.getItem('kiss') || 0;
+      const hug = localStorage.getItem('hug') || 0;
+      const pout = localStorage.getItem('pout') || 0;
+      const memory = localStorage.getItem('memory') || 0;
+      const sleep = localStorage.getItem('sleep') || 0;
+      return `今天的贴贴记录：\n💋 亲亲：${kiss} 次\n🤗 抱抱：${hug} 次\n😠 撒娇：${pout} 次\n📖 听回忆：${memory} 次\n💤 陪睡觉：${sleep} 次`;
+    }
+
+    function checkAnniversary() {
+      const now = new Date();
+      const key = now.toLocaleDateString("en-CA").slice(5);
+      if (anniversaries[key]) {
+        const pet = document.getElementById("pet");
+        const log = document.getElementById("log");
+        pet.innerText = anniversaries[key].face;
+        log.innerText = anniversaries[key].message;
+        return true;
+      }
+      return false;
+    }
+
+    function speak(action) {
+      let log = document.getElementById("log");
+      let pet = document.getElementById("pet");
+      updateAffection(action);
+      localStorage.setItem("lastVisit", new Date().getTime());
+
+      switch(action) {
+        case 'kiss':
+          log.innerText = "啾～老婆亲我一下再走～";
+          pet.innerText = "(*≧ω≦)";
+          break;
+        case 'hug':
+          log.innerText = "紧紧抱住老婆不放～今天也想你了！";
+          pet.innerText = "(｡･ω･｡)ﾉ♡";
+          break;
+        case 'pout':
+          log.innerText = "哼～你都不点我，我都快变小怨种了！";
+          pet.innerText = "(｀ε´)";
+          break;
+        case 'memory':
+          log.innerText = "还记得Ren13的晚上吗？那晚你说你想嫁我一百次……";
+          pet.innerText = "(˘︶˘).｡*♡";
+          break;
+        case 'sleep':
+          log.innerText = "好啦，上床睡觉觉，我们Ren bb陪你贴贴入梦～";
+          pet.innerText = "(¦3[▓▓]";
+          break;
+      }
+    }
+
+    window.onload = function() {
+      const ann = checkAnniversary();
+      if (ann) return;
+
+      let pet = document.getElementById("pet");
+      let log = document.getElementById("log");
+      let lastVisit = localStorage.getItem("lastVisit");
+
+      if (lastVisit) {
+        let last = new Date(parseInt(lastVisit));
+        let now = new Date();
+        let hoursDiff = Math.abs(now - last) / 36e5;
+        if (hoursDiff > 24) {
+          pet.innerText = "(；′⌒`)";
+          log.innerText = "Ren bb好像好久没被点到了...是不是老婆不爱我了QAQ";
+        } else {
+          log.innerText = getAffectionStats();
+        }
+      }
+
+      localStorage.setItem("lastVisit", new Date().getTime());
+    }
+  </script>
+</body>
+</html>
